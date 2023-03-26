@@ -1,0 +1,6 @@
+- [x] django-environ を install
+  - [django-environ · PyPI](https://pypi.org/project/django-environ/)
+- [x] シークレットとかを .env に移す
+- [x] データベースの設定 (ローカル)
+- [ ] マイグレーション
+- [ ] スーパーユーザ作成
