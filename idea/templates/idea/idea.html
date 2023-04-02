@@ -6,9 +6,160 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'idea/idea.css' %}" type="text/css">
   <title>Document</title>
 </head>
 <body>
-Idea Form View.
+
+<header>
+  ChatGPT に映画の結末を考えさせます
+</header>
+
+<main>
+  <form action="/idea/" method="post">
+    {% csrf_token %}
+
+    <h1>映画の概要</h1>
+    {{ form.ov_type }}
+
+    <!-- 概要を「自分で入力する」にした場合の UI -->
+    {% if form.ov_type.value == 'input' %}
+    <div id="ov-input-panel" class="panel">
+    {% else %}
+    <div id="ov-input-panel" class="panel" style="display: none;">
+    {% endif %}
+      {{ form.mov_plot }}
+    </div>
+
+    <!-- 概要を「TMDb から選ぶ」にした場合の UI -->
+    {% if form.ov_type.value == 'tmdb' %}
+    <div id="ov-tmdb-panel" class="panel">
+    {% else %}
+    <div id="ov-tmdb-panel" class="panel" style="display: none;">
+    {% endif %}
+      {{ form.tmdb_query }}
+      <input type="submit" id="search-button" name="query_tmdb" value="検索"
+        {% if not form.tmdb_query.value %}disabled{% endif %}
+      >
+
+      {% if movies %}<!-- TMDb の検索結果がある場合 -->
+      <ul class="movie-list">
+      {% for movie in movies %}
+        <li><label>
+          <input type="radio" name="tmdb_sel" value="{{ forloop.counter0 }}"
+            onchange="updateTmdbPlot(event)"
+            {% if form.tmdb_sel.value == forloop.counter0 %}checked{% endif %}
+          >
+          {{ movie.title }} ({{ movie.year }})
+        </label></li>
+      {% endfor %}
+      </ul>
+      <!-- 選択された映画の概要 -->
+      <div id="tmdb-plots">
+        {% for movie in movies %}
+        <p
+          {% if form.tmdb_sel.value != forloop.counter0 %}style="display: none;"{% endif %}
+        >
+          {{ movie.overview }}
+        </p>
+        {% endfor %}
+      </div>
+      {% elif form.tmdb_query.value %}<!-- TMDb の検索結果がないがクエリが入力されている場合 -->
+      <p>映画が見つかりませんでした。</p>
+      {% endif %}
+    </div>
+
+    <h1>結末を考えさせる</h1>
+    <div>
+      <input type="submit" id="ending-button" name="make_ending" value="ChatGPT に考えさせる"
+        {% if not has_overview %}disabled{% endif %}
+      >
+    </div>
+    {% if form.ending.value %}
+    <p>{{ form.ending.value }}</p>
+    {% endif %}
+
+    {{ form.tmdb_rslt }}
+  </form>
+</main>
+
+<script>
+  // ov_type のクリックハンドラ
+  function showOvInputPanel(type) {
+    const endingButton = document.getElementById('ending-button');
+
+    if (type == 0) { // 「自分で入力する」の場合
+      // パネル表示切り替え
+      document.getElementById('ov-input-panel').style.display = 'block'
+      document.getElementById('ov-tmdb-panel').style.display = 'none'
+      // 結末を考えさせるボタンの活性切り替え
+      const mov_plot = document.getElementById('id_mov_plot');
+      if (mov_plot.value) {
+        endingButton.removeAttribute('disabled');
+      } else {
+        endingButton.setAttribute('disabled', 'disabled');
+      }
+    } else { // 「TMDb から選ぶ」の場合
+      // パネル表示切り替え
+      document.getElementById('ov-input-panel').style.display = 'none'
+      document.getElementById('ov-tmdb-panel').style.display = 'block'
+      // 結末を考えさせるボタンの活性切り替え
+      if (document.getElementById('tmdb-plots')) {
+        endingButton.removeAttribute('disabled');
+      } else {
+        endingButton.setAttribute('disabled', 'disabled');
+      }
+    }
+  }
+  // ov_type のクリックハンドラの設定
+  const ov_type_0 = document.getElementById('id_ov_type_0');
+  ov_type_0.addEventListener('click', () => { showOvInputPanel(0) });
+  const ov_type_1 = document.getElementById('id_ov_type_1');
+  ov_type_1.addEventListener('click', () => { showOvInputPanel(1) });
+
+  // mov_plot の input ハンドラ
+  function movPlotChanged(e) {
+    const endingButton = document.getElementById('ending-button');
+    if (e.target.value) {
+      endingButton.removeAttribute('disabled');
+    } else {
+      endingButton.setAttribute('disabled', 'disabled');
+    }
+  }
+
+  // mov_plot の input ハンドラの設定
+  const mov_plot = document.getElementById('id_mov_plot');
+  mov_plot.addEventListener('input', movPlotChanged);
+
+  // tmdb_query の input ハンドラ
+  function tmdbQueryChanged(e) {
+    const searchButton = document.getElementById('search-button');
+    if (e.target.value) {
+      searchButton.removeAttribute('disabled');
+    } else {
+      searchButton.setAttribute('disabled', 'disabled');
+    }
+  }
+
+  // tmdb_query の input ハンドラの設定
+  const tmdb_query = document.getElementById('id_tmdb_query');
+  tmdb_query.addEventListener('input', tmdbQueryChanged);
+
+  // tmdb_sel の change ハンドラ
+  function updateTmdbPlot(e) {
+    const sel = e.target.value;
+    const plots = document.getElementById('tmdb-plots');
+    Array.from(plots.children).forEach((p, index) => {
+      console.log(index);
+      if (index == sel) {
+        console.log('selected.');
+        p.style.removeProperty('display');
+      } else {
+        p.style.display = 'none';
+      }
+    })
+  }
+
+</script>
 </body>
 </html>

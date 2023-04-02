@@ -1,3 +1,32 @@
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;  /* 強調をなくす */
+}
+
+:root {
+  width: 100%;
+  font-family: "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, Arial, Helvetica;
+  font-size: 18px;
+  -webkit-text-size-adjust: 100%;  /* Safari 回転対策 */
+}
+
 body {
-  text-align: center;
+  margin: 0;
+  background-color: #fafafa;
+}
+
+header {
+  width: 100%;
+  padding: 8px 16px;
+  background-color: honeydew;
+}
+
+main {
+  margin: 8px;
+
+}
+
+h1 {
+  font-size: 1.4em;
+  margin: 0.2em 0;
 }
