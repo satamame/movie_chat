@@ -29,9 +29,9 @@ class IdeaForm(forms.Form):
     # # ChatGPT に DALL-E へのプロンプトを考えさせるプロンプト
     # prmp4dalle = forms.CharField()
 
-    # # ChatGPT が考えた結末
+    # ChatGPT が考えた結末
     ending = forms.CharField(widget=forms.HiddenInput, required=False)
     # # ChatGPT が考えた DALL-E へのプロンプト
     # prmp4poster = forms.CharField()
-    # # DALL-E が描いたポスターの URL
-    # poster_url = forms.URLField()
+    # DALL-E が描いたポスターの URL
+    poster_url = forms.URLField(widget=forms.HiddenInput, required=False)

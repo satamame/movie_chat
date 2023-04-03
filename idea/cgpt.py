@@ -1,6 +1,5 @@
 from django.conf import settings
 import openai
-from openai import InvalidRequestError
 
 openai.api_key = settings.OPENAI_SECRET_KEY
 CHAT_MODEL = 'gpt-3.5-turbo'
@@ -39,3 +38,45 @@ def make_ending(overview):
         return ending.strip()
     except:
         raise Exception('結末を考えられませんでした。')
+
+
+def make_dalle_prmp(overview):
+    '''映画の概要から ChatGPT が DALL·E のプロンプトを考える
+
+    parameters
+    ----------
+    overview : str
+        映画の概要
+
+    returns
+    -------
+    str
+        ChatGPT が考えた DALL·E へのプロンプト
+    '''
+    sys_prmp = '映画のポスターのデザイナーになりきってください。'
+    sys_prmp += '何を聞かれても英語で答えてください。日本語で答えないこと。'
+    sys_prmp += 'OpenAI の safety system に反しないよう、'
+    sys_prmp += '安全な表現だけを使ってください。'
+    sys_prmp += '性、残酷、暴力を思わせる言葉や、倫理に反する言葉は'
+    sys_prmp += '絶対に使わないでください。'
+
+    user_prmp = '以下のプロットで映画を作っています。'
+    user_prmp += 'この映画のポスターを描くための指示が欲しい。'
+    user_prmp += 'たとえば描かれている人物、背景、時代、土地、雰囲気、題名ロゴ、'
+    user_prmp += 'デザイン、画風など。'
+    user_prmp += '英語で40語以内に収めること。'
+    user_prmp += '実在する有名な映画の題名、キャラクター、俳優の名前は使わないこと。'
+    user_prmp += f'\nプロット:\n{overview}'
+
+    try:
+        response = openai.ChatCompletion.create(
+            model=CHAT_MODEL,
+            messages=[
+                {"role": "system", "content": sys_prmp},
+                {"role": "user", "content": user_prmp}
+            ]
+        )
+        dalle_prmp = response["choices"][0]["message"]["content"]
+        return dalle_prmp.strip().strip('"\'')
+    except:
+        raise Exception('DALL·E へのプロンプトを考えられませんでした。')

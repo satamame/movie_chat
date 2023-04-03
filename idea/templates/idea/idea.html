@@ -12,7 +12,7 @@
 <body>
 
 <header>
-  ChatGPT に映画の結末を考えさせます
+  AI に映画の結末とポスターを作らせます
 </header>
 
 <main>
@@ -80,35 +80,56 @@
     {{ form.ending }}
     {% endif %}
 
+    <h1>ポスターを描かせる</h1>
+    <div>
+      <input type="submit" id="poster-button" name="make_poster" value="DALL·E に描かせる"
+        {% if not has_overview %}disabled{% endif %}
+      >
+    </div>
+    {% if form.poster_url.value %}
+    <p><img src="{{ form.poster_url.value }}"></p>
+    {{ form.poster_url }}
+    {% endif %}
+
     {{ form.tmdb_rslt }}
   </form>
 </main>
+
+<div id="loader" class="overlay" style="display: none;">
+  <div class="spinner">
+  </div>
+</div>
 
 <script>
   // ov_type のクリックハンドラ
   function showOvInputPanel(type) {
     const endingButton = document.getElementById('ending-button');
+    const posterButton = document.getElementById('poster-button');
 
     if (type == 0) { // 「自分で入力する」の場合
       // パネル表示切り替え
       document.getElementById('ov-input-panel').style.display = 'block'
       document.getElementById('ov-tmdb-panel').style.display = 'none'
-      // 結末を考えさせるボタンの活性切り替え
+      // 結末/ポスターボタンの活性切り替え
       const mov_plot = document.getElementById('id_mov_plot');
       if (mov_plot.value) {
         endingButton.removeAttribute('disabled');
+        posterButton.removeAttribute('disabled');
       } else {
         endingButton.setAttribute('disabled', 'disabled');
+        posterButton.setAttribute('disabled', 'disabled');
       }
     } else { // 「TMDb から選ぶ」の場合
       // パネル表示切り替え
       document.getElementById('ov-input-panel').style.display = 'none'
       document.getElementById('ov-tmdb-panel').style.display = 'block'
-      // 結末を考えさせるボタンの活性切り替え
+      // 結末/ポスターボタンの活性切り替え
       if (document.getElementById('tmdb-plots')) {
         endingButton.removeAttribute('disabled');
+        posterButton.removeAttribute('disabled');
       } else {
         endingButton.setAttribute('disabled', 'disabled');
+        posterButton.setAttribute('disabled', 'disabled');
       }
     }
   }
@@ -121,10 +142,14 @@
   // mov_plot の input ハンドラ
   function movPlotChanged(e) {
     const endingButton = document.getElementById('ending-button');
+    const posterButton = document.getElementById('poster-button');
+
     if (e.target.value) {
       endingButton.removeAttribute('disabled');
+      posterButton.removeAttribute('disabled');
     } else {
       endingButton.setAttribute('disabled', 'disabled');
+      posterButton.setAttribute('disabled', 'disabled');
     }
   }
 
@@ -160,6 +185,20 @@
       }
     })
   }
+
+  // submit のクリックハンドラ (ローダーを表示する)
+  function showLoader(e) {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+  }
+
+  // submit の click ハンドラの設定
+  const searchButton = document.getElementById('search-button');
+  searchButton.addEventListener('click', showLoader);
+  const endingButton = document.getElementById('ending-button');
+  endingButton.addEventListener('click', showLoader);
+  const posterButton = document.getElementById('poster-button');
+  posterButton.addEventListener('click', showLoader);
 
 </script>
 </body>

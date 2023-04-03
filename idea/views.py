@@ -1,14 +1,14 @@
 import copy
 import json
-from typing import Dict, Any
 
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 
 from .forms import IdeaForm
+from .cgpt import make_ending, make_dalle_prmp
+from .dalle import make_poster
 from .tmdb import search_tmdb
-from .cgpt import make_ending
 
 class IdeaView(FormView):
     template_name = 'idea/idea.html'
@@ -36,6 +36,15 @@ class IdeaView(FormView):
             else:
                 overview = form_data.get('mov_plot')
             form_data |= {'ending': make_ending(overview)}
+
+        # ポスターを描くボタンが押された場合
+        if 'make_poster' in self.request.POST:
+            if form_data.get('ov_type') == 'tmdb':
+                overview = movies[form_data.get('tmdb_sel')]['overview']
+            else:
+                overview = form_data.get('mov_plot')
+            prmp = make_dalle_prmp(overview)
+            form_data |= {'poster_url': make_poster(prmp)}
 
         # 映画の概要が入力済みかどうか
         ov_type = form_data['ov_type']
