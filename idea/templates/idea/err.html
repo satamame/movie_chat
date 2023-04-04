@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'idea/idea.css' %}" type="text/css">
+  <title>ERROR</title>
+</head>
+<body>
+
+<header>
+  すみません。エラーが起きました。
+</header>
+
+<main>
+  <p>{{ err_msg }}</p>
+  <button onclick="goTop(event)">
+    やり直す
+  </button>
+</main>
+
+<script>
+  function goTop(e) {
+    location = "{% url 'idea:idea' %}";
+  }
+</script>
+
+</body>
+</html>

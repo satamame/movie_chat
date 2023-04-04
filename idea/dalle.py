@@ -26,8 +26,6 @@ def make_poster(prompt):
         )
         return response['data'][0]['url']
     except InvalidRequestError as err:
-        print(f'Invalid Request: {err}')
-        return
+        raise Exception(f'DALL·E へのリクエストエラー: {err}')
     except Exception as err:
-        print(f'Error: {err}')
-        return
+        raise Exception(f'DALL·E でエラー: {err}')

@@ -1,5 +1,6 @@
 import copy
 import json
+from typing import Dict
 
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
@@ -14,10 +15,7 @@ class IdeaView(FormView):
     template_name = 'idea/idea.html'
     form_class = IdeaForm
 
-    def form_valid(self, form) -> HttpResponse:
-        # form のデータを書き換え可能にするためのコピーを作る
-        form_data = copy.deepcopy(form.cleaned_data)
-
+    def next_context(self, form_data) -> Dict:
         # TMDb の検索ボタンが押された場合
         if 'query_tmdb' in self.request.POST:
             # TMDb を検索して結果を form の tmdb_rslt にセットする
@@ -57,7 +55,17 @@ class IdeaView(FormView):
             'movies': movies,
             'has_overview': has_overview,
         }
-        return render(self.request, self.template_name, context)
+        return context
+
+    def form_valid(self, form) -> HttpResponse:
+        # form のデータを書き換え可能にするためのコピーを作る
+        form_data = copy.deepcopy(form.cleaned_data)
+        try:
+            context = self.next_context(form_data)
+            return render(self.request, self.template_name, context)
+        except Exception as err:
+            context = {'err_msg': str(err)}
+            return render(self.request, 'idea/err.html', context)
 
     def form_invalid(self, form):
         '''デバッグ用
