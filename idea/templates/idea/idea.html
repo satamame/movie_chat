@@ -16,7 +16,7 @@
 </header>
 
 <main>
-  <form action="/idea/" method="post">
+  <form action="{% url 'idea:idea' %}" method="post">
     {% csrf_token %}
 
     <h1>映画の概要</h1>
