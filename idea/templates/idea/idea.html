@@ -12,7 +12,8 @@
 <body>
 
 <header>
-  AI に映画の結末とポスターを作らせます
+  <a href="{% url 'idea:idea' %}"><img src="{% static 'icon/restart_alt_black_24dp.svg' %}"></a>
+  結末 & ポスターメーカー
 </header>
 
 <main>
@@ -69,25 +70,25 @@
       {% endif %}
     </div>
 
-    <h1>結末を考えさせる</h1>
+    <h1 {% if show_ending %}id="to"{% endif %}>結末を考えさせる</h1>
     <div>
       <input type="submit" id="ending-button" name="make_ending" value="ChatGPT に考えさせる"
         {% if not has_overview %}disabled{% endif %}
-      >
+        > <span class="notes">(時間がかかります)</span>
     </div>
     {% if form.ending.value %}
     <p>{{ form.ending.value }}</p>
     {{ form.ending }}
     {% endif %}
 
-    <h1>ポスターを描かせる</h1>
+    <h1 {% if show_poster %}id="to"{% endif %}>ポスターを描かせる</h1>
     <div>
       <input type="submit" id="poster-button" name="make_poster" value="DALL·E に描かせる"
         {% if not has_overview %}disabled{% endif %}
-      >
+      > <span class="notes">(時間がかかります)</span>
     </div>
     {% if form.poster_url.value %}
-    <p><img src="{{ form.poster_url.value }}"></p>
+    <p><img src="{{ form.poster_url.value }}" id="poster"></p>
     {{ form.poster_url }}
     {% endif %}
 
@@ -101,6 +102,24 @@
 </div>
 
 <script>
+  // 初期スクロール
+  function initialScroll() {
+    const to = document.getElementById('to');
+    if (to) {
+      to.scrollIntoView();
+    }
+  }
+
+  // ポスターがあれば、ロードを待ってからスクロール
+  const poster = document.getElementById('poster');
+  if (poster) {
+    poster.addEventListener('load', (e) => {
+      initialScroll();
+    })
+  } else {
+    setTimeout(() => { initialScroll() }, 0);
+  }
+
   // ov_type のクリックハンドラ
   function showOvInputPanel(type) {
     const endingButton = document.getElementById('ending-button');

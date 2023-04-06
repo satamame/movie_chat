@@ -31,7 +31,8 @@ input[type="text"] {
 
 ul.movie-list {
   list-style-type: none;
-  padding-left: 1em;
+  padding-left: 1.5em;
+  text-indent: -1.5em;
 }
 
 #tmdb-plots {
@@ -42,6 +43,15 @@ ul.movie-list {
 
 #tmdb-plots p {
   margin: 0.5em;
+}
+
+.notes {
+  font-size: 0.8em;
+}
+
+#poster {
+  width: 100%;
+  max-width: 500px;
 }
 
 .overlay {

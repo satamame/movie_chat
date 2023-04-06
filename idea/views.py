@@ -16,6 +16,9 @@ class IdeaView(FormView):
     form_class = IdeaForm
 
     def next_context(self, form_data) -> Dict:
+        show_ending = False
+        show_poster = False
+
         # TMDb の検索ボタンが押された場合
         if 'query_tmdb' in self.request.POST:
             # TMDb を検索して結果を form の tmdb_rslt にセットする
@@ -34,6 +37,7 @@ class IdeaView(FormView):
             else:
                 overview = form_data.get('mov_plot')
             form_data |= {'ending': make_ending(overview)}
+            show_ending = True
 
         # ポスターを描くボタンが押された場合
         if 'make_poster' in self.request.POST:
@@ -43,6 +47,7 @@ class IdeaView(FormView):
                 overview = form_data.get('mov_plot')
             prmp = make_dalle_prmp(overview)
             form_data |= {'poster_url': make_poster(prmp)}
+            show_poster = True
 
         # 映画の概要が入力済みかどうか
         ov_type = form_data['ov_type']
@@ -54,6 +59,8 @@ class IdeaView(FormView):
             'form': IdeaForm(form_data),
             'movies': movies,
             'has_overview': has_overview,
+            'show_ending': show_ending,
+            'show_poster': show_poster,
         }
         return context
 
