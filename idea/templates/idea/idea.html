@@ -195,9 +195,7 @@
     const sel = e.target.value;
     const plots = document.getElementById('tmdb-plots');
     Array.from(plots.children).forEach((p, index) => {
-      console.log(index);
       if (index == sel) {
-        console.log('selected.');
         p.style.removeProperty('display');
       } else {
         p.style.display = 'none';
