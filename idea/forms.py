@@ -23,7 +23,10 @@ class IdeaForm(forms.Form):
     tmdb_sel = forms.IntegerField(required=False)
 
     # # ChatGPT に読ませる映画のプロット (自分で入力する場合)
-    mov_plot = forms.CharField(widget=forms.Textarea, required=False)
+    mov_plot = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': '6'}),
+        required=False,
+    )
     # # ChatGPT に結末を考えさせるプロンプト
     # prmp4ending = forms.CharField()
     # # ChatGPT に DALL-E へのプロンプトを考えさせるプロンプト
