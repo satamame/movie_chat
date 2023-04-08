@@ -15,7 +15,7 @@ class IdeaForm(forms.Form):
     )
 
     # TMDb に映画情報を問い合わせる時のクエリ (映画の題名)
-    tmdb_query = forms.CharField(max_length=100)
+    tmdb_query = forms.CharField(max_length=100, required=False)
     # TMDb からのレスポンスの results 部分。JSON 文字列。
     # tmdb_rslt = forms.CharField(widget=forms.HiddenInput, required=False)
     tmdb_rslt = forms.CharField(widget=forms.HiddenInput, required=False)

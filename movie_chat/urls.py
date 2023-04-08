@@ -18,7 +18,9 @@ from django.shortcuts import redirect
 from django.urls import path, include
 
 urlpatterns = [
-    path('', lambda request: redirect(request.path + 'idea/')),
+    path('', lambda request: redirect(
+        request.path + ('idea/' if request.path.endswith('/') else '/idea/')
+    )),
     path('admin/', admin.site.urls),
     path('idea/', include('idea.urls')),
 ]
