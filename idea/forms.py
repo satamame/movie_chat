@@ -19,10 +19,10 @@ class IdeaForm(forms.Form):
     # TMDb からのレスポンスの results 部分。JSON 文字列。
     # tmdb_rslt = forms.CharField(widget=forms.HiddenInput, required=False)
     tmdb_rslt = forms.CharField(widget=forms.HiddenInput, required=False)
-    # # TMDb からのレスポンスに複数の映画があった場合、ユーザが選択した番号
+    # TMDb からのレスポンスに複数の映画があった場合、ユーザが選択した番号
     tmdb_sel = forms.IntegerField(required=False)
 
-    # # ChatGPT に読ませる映画のプロット (自分で入力する場合)
+    # ChatGPT に読ませる映画のプロット (自分で入力する場合)
     mov_plot = forms.CharField(
         widget=forms.Textarea(attrs={'rows': '6'}),
         required=False,

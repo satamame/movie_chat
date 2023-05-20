@@ -50,7 +50,7 @@
 
 .env
 ```
-DATABASE_URL=mysql://root:kimpatsu&563@127.0.0.1:3306/movie_chat
+DATABASE_URL=mysql://user:pass@127.0.0.1:3306/movie_chat
 ```
 
 コマンド
