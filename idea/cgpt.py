@@ -2,7 +2,7 @@ from django.conf import settings
 import openai
 
 openai.api_key = settings.OPENAI_SECRET_KEY
-CHAT_MODEL = 'gpt-3.5-turbo'
+CHAT_MODEL = 'gpt-3.5-turbo-0613'
 
 
 def make_ending(overview):
