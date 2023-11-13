@@ -134,4 +134,4 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TMDB_API_KEY = env('TMDB_API_KEY')
-OPENAI_SECRET_KEY = env('OPENAI_SECRET_KEY')
+OPENAI_API_KEY = env('OPENAI_API_KEY')

@@ -1,8 +1,9 @@
-from django.conf import settings
 import openai
+from django.conf import settings
+from openai import OpenAI
 
-openai.api_key = settings.OPENAI_SECRET_KEY
-CHAT_MODEL = 'gpt-3.5-turbo-0613'
+MODEL = 'gpt-3.5-turbo-1106'
+client = OpenAI()
 
 
 def make_ending(overview):
@@ -30,14 +31,14 @@ def make_ending(overview):
     user_prmp += f'\nプロット:\n{overview}'
 
     try:
-        response = openai.ChatCompletion.create(
-            model=CHAT_MODEL,
+        response = client.chat.completions.create(
+            model=MODEL,
             messages=[
                 {"role": "system", "content": sys_prmp},
                 {"role": "user", "content": user_prmp},
             ]
         )
-        ending = response["choices"][0]["message"]["content"]
+        ending = response.choices[0].message.content
         return ending.strip()
     except:
         raise Exception('結末を考えられませんでした。')
@@ -72,14 +73,14 @@ def make_dalle_prmp(overview):
     user_prmp += f'\nプロット:\n{overview}'
 
     try:
-        response = openai.ChatCompletion.create(
-            model=CHAT_MODEL,
+        response = client.chat.completions.create(
+            model=MODEL,
             messages=[
                 {"role": "system", "content": sys_prmp},
                 {"role": "user", "content": user_prmp}
             ]
         )
-        dalle_prmp = response["choices"][0]["message"]["content"]
+        dalle_prmp = response.choices[0].message.content
         return dalle_prmp.strip().strip('"\'')
     except:
         raise Exception('DALL·E へのプロンプトを考えられませんでした。')

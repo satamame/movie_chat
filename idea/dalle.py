@@ -1,9 +1,10 @@
-from django.conf import settings
 import openai
-from openai import InvalidRequestError
+from django.conf import settings
+from openai import OpenAI
 
-openai.api_key = settings.OPENAI_SECRET_KEY
+MODEL = 'dall-e-2'
 SIZE = '512x512'
+client = OpenAI()
 
 
 def make_poster(prompt):
@@ -20,12 +21,13 @@ def make_poster(prompt):
         ポスターの URL
     '''
     try:
-        response = openai.Image.create(
+        response = client.images.generate(
+            model=MODEL,
             prompt=prompt,
             size=SIZE,
         )
-        return response['data'][0]['url']
-    except InvalidRequestError as err:
-        raise Exception(f'DALL·E へのリクエストエラー: {err}')
+        return response.data[0].url
+    # except InvalidRequestError as err:
+    #     raise Exception(f'DALL·E へのリクエストエラー: {err}')
     except Exception as err:
         raise Exception(f'DALL·E でエラー: {err}')
