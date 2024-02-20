@@ -40,8 +40,8 @@ def make_ending(overview):
         )
         ending = response.choices[0].message.content
         return ending.strip()
-    except:
-        raise Exception('結末を考えられませんでした。')
+    except Exception as e:
+        raise Exception(f'結末を考えられませんでした。\n{e}')
 
 
 def make_dalle_prmp(overview):
@@ -82,5 +82,5 @@ def make_dalle_prmp(overview):
         )
         dalle_prmp = response.choices[0].message.content
         return dalle_prmp.strip().strip('"\'')
-    except:
-        raise Exception('DALL·E へのプロンプトを考えられませんでした。')
+    except Exception as e:
+        raise Exception(f'DALL·E へのプロンプトを考えられませんでした。\n{e}')
