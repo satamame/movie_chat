@@ -1,5 +1,3 @@
-import openai
-from django.conf import settings
 from openai import OpenAI
 
 MODEL = 'dall-e-2'
@@ -30,4 +28,4 @@ def make_poster(prompt):
     # except InvalidRequestError as err:
     #     raise Exception(f'DALL·E へのリクエストエラー: {err}')
     except Exception as err:
-        raise Exception(f'DALL·E でエラー: {err}')
+        raise Exception(f'DALL·E でエラー:\n{err}')

@@ -1,5 +1,3 @@
-import openai
-from django.conf import settings
 from openai import OpenAI
 
 MODEL = 'gpt-3.5-turbo-1106'

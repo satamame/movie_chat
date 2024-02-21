@@ -2,7 +2,8 @@ import copy
 import json
 from typing import Dict
 
-from django.http import HttpRequest, HttpResponse
+from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 
@@ -11,9 +12,15 @@ from .cgpt import make_ending, make_dalle_prmp
 from .dalle import make_poster
 from .tmdb import search_tmdb
 
+
 class IdeaView(FormView):
     template_name = 'idea/idea.html'
     form_class = IdeaForm
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context |= {'version': settings.VERSION}
+        return context
 
     def next_context(self, form_data) -> Dict:
         show_ending = False
@@ -67,11 +74,13 @@ class IdeaView(FormView):
     def form_valid(self, form) -> HttpResponse:
         # form のデータを書き換え可能にするためのコピーを作る
         form_data = copy.deepcopy(form.cleaned_data)
+
+        context = {'version': settings.VERSION}
         try:
-            context = self.next_context(form_data)
+            context |= self.next_context(form_data)
             return render(self.request, self.template_name, context)
         except Exception as err:
-            context = {'err_msg': str(err)}
+            context |= {'err_msg': str(err)}
             return render(self.request, 'idea/err.html', context)
 
     def form_invalid(self, form):

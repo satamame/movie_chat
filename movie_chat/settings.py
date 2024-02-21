@@ -14,6 +14,8 @@ from pathlib import Path
 
 import environ
 
+VERSION = '0.2.2'
+
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
