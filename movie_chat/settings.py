@@ -14,7 +14,7 @@ from pathlib import Path
 
 import environ
 
-VERSION = '0.2.2'
+VERSION = '0.2.3'
 
 env = environ.Env(
     # set casting, default value
