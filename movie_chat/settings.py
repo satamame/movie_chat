@@ -14,7 +14,7 @@ from pathlib import Path
 
 import environ
 
-VERSION = '0.2.3'
+VERSION = '0.3.0'
 
 env = environ.Env(
     # set casting, default value
@@ -92,18 +92,19 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
+validation_pkg = 'django.contrib.auth.password_validation'
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': validation_pkg + '.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': validation_pkg + '.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': validation_pkg + '.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': validation_pkg + '.NumericPasswordValidator',
     },
 ]
 
@@ -137,3 +138,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TMDB_API_KEY = env('TMDB_API_KEY')
 OPENAI_API_KEY = env('OPENAI_API_KEY')
+OPENAI_MODEL = env('OPENAI_MODEL', str, 'gpt-4o-mini')
