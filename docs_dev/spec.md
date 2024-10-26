@@ -1,4 +1,4 @@
 ## Version
 
-- Python 3.10.0
-- Django 4.1.7
+- Python 3.12.3
+- Django 5.1.1

@@ -1,6 +1,6 @@
+from django.conf import settings
 from openai import OpenAI
 
-MODEL = 'gpt-3.5-turbo-1106'
 client = OpenAI()
 
 
@@ -30,7 +30,7 @@ def make_ending(overview):
 
     try:
         response = client.chat.completions.create(
-            model=MODEL,
+            model=settings.OPENAI_MODEL,
             messages=[
                 {"role": "system", "content": sys_prmp},
                 {"role": "user", "content": user_prmp},
@@ -72,7 +72,7 @@ def make_dalle_prmp(overview):
 
     try:
         response = client.chat.completions.create(
-            model=MODEL,
+            model=settings.OPENAI_MODEL,
             messages=[
                 {"role": "system", "content": sys_prmp},
                 {"role": "user", "content": user_prmp}
